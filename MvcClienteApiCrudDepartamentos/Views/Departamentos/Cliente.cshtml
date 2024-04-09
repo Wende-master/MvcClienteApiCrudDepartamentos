@@ -1,0 +1,78 @@
+﻿@section Scripts {
+    <script src="~/js/serviceapidepartamentos.js"></script>
+    <script>
+        $(document).ready(function () {
+            loadDepartamentos();
+
+            $("#botoninsert").click(function () {
+                //var id = parseInt($("#cajaid").val());
+                var nombre = $("#cajanombre").val();
+                var localidad = $("#cajalocalidad").val();
+                insertDepartamentoAsync(/*id,*/ nombre, localidad, function () {
+                    loadDepartamentos();
+                })
+            });
+
+            $("#botonupdate").click(function () {
+                var id = parseInt($("#cajaid").val());
+                var nombre = $("#cajanombre").val();
+                var localidad = $("#cajalocalidad").val();
+                updateDepartamentoAsync(id, nombre, localidad, function () {
+                    loadDepartamentos();
+                })
+
+            });
+
+            $("#botondelete").click(function () {
+                var id = $("#cajaid").val(); //NO HACE FALTA parseInt AL SER UNA CONCATENACIÓN
+                deleteDepartamentoAsync(id, function () {
+                    loadDepartamentos();
+                });
+            });
+        });
+
+        function loadDepartamentos() {
+            getJsonDepartamentosAsync(function (data) {
+                var html = "";
+                $.each(data, function (index, dept) {
+                    html += "<tr>";
+                    html += "<td>" + dept.idDepartamento + "</td>";
+                    html += "<td>" + dept.nombre + "</td>";
+                    html += "<td>" + dept.localidad + "</td>";
+                    html += "<td>" + "<a > Detalles </a>" + "</td>";
+                    html += "</tr>"
+                });
+
+                $("#tabladepartamentos tbody").html(html);
+            });
+        }
+    </script>
+}
+
+<h1>
+    Api CRUD departamentos
+</h1>
+
+<label class="form-label">ID</label>
+<input class="form-control" id="cajaid" type="number" />
+
+<label class="form-label">Nombre</label>
+<input class="form-control" id="cajanombre" type="text" />
+<label class="form-label">Localidad</label>
+<input class="form-control" id="cajalocalidad" type="text" />
+<button class="btn btn-outline-success" id="botoninsert">Insertar</button>
+<button class="btn btn-outline-warning" id="botonupdate">Actualizar</button>
+<button class="btn btn-outline-danger" id="botondelete">Eliminar</button>
+<hr />
+
+<table class="table table-secondary table-bordered" id="tabladepartamentos">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Localidad</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
